@@ -18,11 +18,14 @@
     grid-template-rows: auto 1fr;
     gap: 30px;
     padding: 15px;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+  /* Base top padding */
+  padding-top: 15px;
+    box-shadow: rgba(253, 111, 2, 0.3) 0px 1px 2px 0px,
       rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 
     background-color: white;
-    height: 862.5px;
+    /* No artificial page height/breakpoint on screen */
+    height: auto;
     width: 600px;
     font-family: var(--font-raleway);
     color: black;
