@@ -5,7 +5,8 @@
   "type": "module",
   "homepage": "https://renchester.github.io/cv-generator/",
   "scripts": {
-    "dev": "vite",
+    "start": "vite --open",
+    "dev": "vite --open",
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",

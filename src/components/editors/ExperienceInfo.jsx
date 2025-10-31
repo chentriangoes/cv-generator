@@ -6,7 +6,7 @@ import FormBanner from './FormBanner';
 import ItemBanner from './ItemBanner';
 
 function ExperienceInfo(props) {
-  const { data, deleteExpInfo, handleSubmit } = props;
+  const { data, deleteExpInfo, handleSubmit, reorderList } = props;
   const infoType = 'experienceInfo';
 
   const emptyState = {
@@ -80,16 +80,45 @@ function ExperienceInfo(props) {
     }));
   };
 
-  const submittedInfoMarkup = data.map((submittedInfo) => (
-    <FormBanner
+  const handleDragStart = (e) => {
+    const idx = e.currentTarget.dataset.index;
+    if (idx === undefined) return;
+    e.dataTransfer.setData('text/plain', idx);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const sourceIndex = Number(e.dataTransfer.getData('text/plain'));
+    const destIndex = Number(e.currentTarget.dataset.index);
+    if (Number.isNaN(sourceIndex) || Number.isNaN(destIndex)) return;
+    if (sourceIndex === destIndex) return;
+    if (reorderList) reorderList(infoType, sourceIndex, destIndex);
+  };
+
+  const submittedInfoMarkup = data.map((submittedInfo, idx) => (
+    <div
       key={submittedInfo.id}
-      id={submittedInfo.id}
-      handleDelete={deleteExpInfo}
-      handleEdit={editExpInfo}
-      mainText={submittedInfo.company}
-      subText={submittedInfo.jobTitle}
-      type={infoType}
-    />
+      data-index={idx}
+      draggable
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
+      <FormBanner
+        id={submittedInfo.id}
+        handleDelete={deleteExpInfo}
+        handleEdit={editExpInfo}
+        mainText={submittedInfo.company}
+        subText={submittedInfo.jobTitle}
+        type={infoType}
+      />
+    </div>
   ));
 
   const addlInfoMarkup = expInfo.additionalInfo.map((item) => (

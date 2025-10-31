@@ -134,6 +134,26 @@ function App() {
     }));
   };
 
+  // Reorder items in any top-level list stored on formData
+  // type: string (educationInfo | experienceInfo | skillsInfo | otherInfo)
+  // sourceIndex, destinationIndex: numeric indices within the array
+  const reorderList = (type, sourceIndex, destinationIndex) => {
+    setFormData((prevFormData) => {
+      const list = Array.from(prevFormData[type] || []);
+      if (!list.length) return prevFormData;
+      if (sourceIndex < 0 || sourceIndex >= list.length) return prevFormData;
+      if (destinationIndex < 0 || destinationIndex > list.length) return prevFormData;
+
+      const [moved] = list.splice(sourceIndex, 1);
+      list.splice(destinationIndex, 0, moved);
+
+      return {
+        ...prevFormData,
+        [type]: list,
+      };
+    });
+  };
+
   return (
     <div className="App">
       <Editor
@@ -144,6 +164,7 @@ function App() {
         deleteBackgroundInfo={deleteBackgroundInfo}
         submitCategoryInfo={submitCategoryInfo}
         deleteCategoryInfo={deleteCategoryInfo}
+        reorderList={reorderList}
       />
       {previewVisible && <Preview formData={formData} />}
       <div className="btn-container__preview">

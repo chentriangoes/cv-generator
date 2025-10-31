@@ -17,6 +17,8 @@ function Editor(props) {
     deleteCategoryInfo,
   } = props;
 
+  const { reorderList } = props;
+
   const [isDarkMode, setDarkMode] = useState(
     JSON.parse(localStorage.getItem('isDarkMode')) || false,
   );
@@ -84,12 +86,14 @@ function Editor(props) {
         data={formData.educationInfo}
         handleSubmit={submitBackgroundInfo}
         deleteEducInfo={deleteBackgroundInfo}
+        reorderList={reorderList}
       />
 
       <ExperienceInfo
         data={formData.experienceInfo}
         handleSubmit={submitBackgroundInfo}
         deleteExpInfo={deleteBackgroundInfo}
+        reorderList={reorderList}
       />
 
       <CategoryInfo
@@ -97,6 +101,7 @@ function Editor(props) {
         handleSubmit={submitCategoryInfo}
         handleDelete={deleteCategoryInfo}
         infoType="skillsInfo"
+        reorderList={reorderList}
       />
 
       <CategoryInfo
@@ -104,6 +109,7 @@ function Editor(props) {
         handleSubmit={submitCategoryInfo}
         handleDelete={deleteCategoryInfo}
         infoType="otherInfo"
+        reorderList={reorderList}
       />
     </div>
   );
