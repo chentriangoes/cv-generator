@@ -90,6 +90,19 @@
   .preview__printable.preview__printable {
     display: grid;
     box-shadow: none;
+    /* Let the browser determine page height when printing so it can create multiple pages as needed */
+    width: auto;
+    height: auto;
+  }
+
+  /* Keep logical preview units together where possible to avoid splitting entries across printed pages */
+  .preview-unit__educ-info,
+  .preview-unit__exp-info,
+  .preview__skill-container,
+  .preview__category-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    -webkit-column-break-inside: avoid;
   }
 
   .btn-container__preview.btn-container__preview {
