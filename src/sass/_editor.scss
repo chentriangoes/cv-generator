@@ -5,6 +5,10 @@
   max-height: 100vh;
   overflow-y: auto;
   padding: 50px;
+  flex: 0 0 auto;
+  width: 600px;
+  min-width: 600px;
+  max-width: 600px;
 
   &::-webkit-scrollbar {
     width: 0.25em;
