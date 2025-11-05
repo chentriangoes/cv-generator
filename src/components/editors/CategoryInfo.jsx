@@ -13,10 +13,12 @@ function CategoryInfo(props) {
   const [categoryInfo, setCategoryInfo] = useState(
     JSON.parse(localStorage.getItem(`cv${infoType}`)) || emptyState,
   );
+  
+  const [editingId, setEditingId] = useState(null); // 追蹤正在編輯的項目ID
 
   useEffect(() => {
     localStorage.setItem(`cv${infoType}`, JSON.stringify(categoryInfo));
-  }, [categoryInfo]);
+  }, [categoryInfo, infoType]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,12 +30,10 @@ function CategoryInfo(props) {
   };
 
   const editCategoryInfo = (id) => {
-    // Show warning
-    handleDelete(id, infoType);
-
+    // 不刪除項目，只是載入資料並記錄編輯ID
     const target = data.find((item) => item.id === id);
-
     setCategoryInfo(Object.assign(target, { currentItem: '' }));
+    setEditingId(id);
   };
 
   const submitCategoryInfo = (e) => {
@@ -41,7 +41,16 @@ function CategoryInfo(props) {
 
     if (!categoryInfo.category || !categoryInfo.items.length) return;
 
-    handleSubmit(e, infoType);
+    if (editingId) {
+      // 如果是編輯模式，通知 App.jsx 這是編輯操作
+      e.target.dataset.editingId = editingId;
+      handleSubmit(e, infoType);
+      setEditingId(null);
+    } else {
+      // 新增模式
+      handleSubmit(e, infoType);
+    }
+    
     setCategoryInfo(emptyState);
   };
 

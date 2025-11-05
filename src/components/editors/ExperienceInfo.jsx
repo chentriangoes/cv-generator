@@ -22,6 +22,8 @@ function ExperienceInfo(props) {
   const [expInfo, setExpInfo] = useState(
     JSON.parse(localStorage.getItem('cvExperienceInfo')) || emptyState,
   );
+  
+  const [editingId, setEditingId] = useState(null); // 追蹤正在編輯的項目ID
 
   useEffect(() => {
     localStorage.setItem('cvExperienceInfo', JSON.stringify(expInfo));
@@ -37,16 +39,25 @@ function ExperienceInfo(props) {
   };
 
   const editExpInfo = (id) => {
-    // Show warning
-    deleteExpInfo(id, infoType);
-
-    setExpInfo(data.find((item) => item.id === id));
+    // 不刪除項目，只是載入資料並記錄編輯ID
+    const itemToEdit = data.find((item) => item.id === id);
+    setExpInfo(itemToEdit);
+    setEditingId(id);
   };
 
   const submitExpInfo = (e) => {
     e.preventDefault();
 
-    handleSubmit(e, infoType);
+    if (editingId) {
+      // 如果是編輯模式，通知 App.jsx 這是編輯操作
+      e.target.dataset.editingId = editingId;
+      handleSubmit(e, infoType);
+      setEditingId(null);
+    } else {
+      // 新增模式
+      handleSubmit(e, infoType);
+    }
+    
     setExpInfo(emptyState);
   };
 

@@ -70,7 +70,7 @@ function App() {
     e.preventDefault();
 
     const parentEl = e.target.closest('form');
-    const editingId = e.target.dataset.editingId;
+    const { editingId } = e.target.dataset;
 
     const newInfo = [...parentEl.querySelectorAll('input')]
       .map((field) => ({
@@ -125,6 +125,7 @@ function App() {
     e.preventDefault();
 
     const parentEl = e.target.closest('form');
+    const { editingId } = e.target.dataset;
 
     const category = parentEl.querySelector('.form-input__item-category').value;
     const submittedItems = [
@@ -133,17 +134,34 @@ function App() {
 
     if (!category) return;
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [type]: [
-        ...prevFormData[type],
-        {
-          category,
-          items: submittedItems,
-          id: nanoid(),
-        },
-      ],
-    }));
+    if (editingId) {
+      // 編輯模式：更新現有項目
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [type]: prevFormData[type].map((item) =>
+          item.id === editingId
+            ? {
+                category,
+                items: submittedItems,
+                id: editingId,
+              }
+            : item
+        ),
+      }));
+    } else {
+      // 新增模式：添加新項目
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [type]: [
+          ...prevFormData[type],
+          {
+            category,
+            items: submittedItems,
+            id: nanoid(),
+          },
+        ],
+      }));
+    }
   };
 
   const deleteCategoryInfo = (id, type) => {
