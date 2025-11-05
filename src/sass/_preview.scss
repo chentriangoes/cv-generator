@@ -2,20 +2,15 @@
   &__container {
     position: relative;
     color: var(--color-text);
-    // width: clamp(300px, 50%, 816px);
     width: 100%;
-    flex-grow: 1;
+    flex: 1;
     background-color: var(--color-background-preview);
 
     display: flex;
     align-items: flex-start;
     justify-content: center;
     
-    /* 添加滾動條 */
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 100vh;
-    padding: 20px 0;
+    padding: 20px;
   }
 
   &__printable {
@@ -24,18 +19,35 @@
     grid-template-rows: auto 1fr;
     gap: 30px;
     padding: 15px;
-  /* Base top padding */
-  padding-top: 15px;
+    padding-top: 15px;
     box-shadow: rgba(253, 111, 2, 0.3) 0px 1px 2px 0px,
       rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 
     background-color: white;
-    /* No artificial page height/breakpoint on screen */
     height: auto;
     width: 600px;
     font-family: var(--font-raleway);
     color: black;
     line-height: normal;
+    
+    /* 滾動條移到這裡 */
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 40px);
+    
+    &::-webkit-scrollbar {
+      width: 0.25em;
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+    }
   }
 
   &__main-col {

@@ -93,6 +93,8 @@
     /* Let the browser determine page height when printing so it can create multiple pages as needed */
     width: auto;
     height: auto;
+    overflow: visible;
+    max-height: none;
   }
 
 
