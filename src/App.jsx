@@ -70,6 +70,7 @@ function App() {
     e.preventDefault();
 
     const parentEl = e.target.closest('form');
+    const editingId = e.target.dataset.editingId;
 
     const newInfo = [...parentEl.querySelectorAll('input')]
       .map((field) => ({
@@ -81,18 +82,36 @@ function App() {
       ...parentEl.querySelectorAll('.submitted-item__name'),
     ].map((el) => ({ id: el.dataset.id, content: el.textContent }));
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [type]: [
-        ...prevFormData[type],
-        {
-          ...newInfo,
-          id: nanoid(),
-          additionalInfo: addlInfo,
-          currentInfoItem: '',
-        },
-      ],
-    }));
+    if (editingId) {
+      // 編輯模式：更新現有項目
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [type]: prevFormData[type].map((item) =>
+          item.id === editingId
+            ? {
+                ...newInfo,
+                id: editingId,
+                additionalInfo: addlInfo,
+                currentInfoItem: '',
+              }
+            : item
+        ),
+      }));
+    } else {
+      // 新增模式：添加新項目
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [type]: [
+          ...prevFormData[type],
+          {
+            ...newInfo,
+            id: nanoid(),
+            additionalInfo: addlInfo,
+            currentInfoItem: '',
+          },
+        ],
+      }));
+    }
   };
 
   const deleteBackgroundInfo = (id, type) => {

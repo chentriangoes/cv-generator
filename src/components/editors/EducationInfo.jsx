@@ -24,6 +24,8 @@ function EducationInfo(props) {
   const [educInfo, setEducInfo] = useState(
     JSON.parse(localStorage.getItem('cvEducationInfo')) || emptyState,
   );
+  
+  const [editingId, setEditingId] = useState(null); // 追蹤正在編輯的項目ID
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -39,17 +41,24 @@ function EducationInfo(props) {
   }, [educInfo]);
 
   const editEducInfo = (id) => {
-    // Show warning
-    deleteEducInfo(id, infoType);
-
-    setEducInfo(data.find((item) => item.id === id));
+    // 不刪除項目，只是載入資料並記錄編輯ID
+    const itemToEdit = data.find((item) => item.id === id);
+    setEducInfo(itemToEdit);
+    setEditingId(id);
   };
 
   const submitEducInfo = (e) => {
     e.preventDefault();
 
-    // Submit local state to app state
-    handleSubmit(e, infoType);
+    if (editingId) {
+      // 如果是編輯模式，通知 App.jsx 這是編輯操作
+      e.target.dataset.editingId = editingId;
+      handleSubmit(e, infoType);
+      setEditingId(null);
+    } else {
+      // 新增模式
+      handleSubmit(e, infoType);
+    }
 
     // Set local state to empty
     setEducInfo(emptyState);
