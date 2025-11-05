@@ -8,8 +8,14 @@
     background-color: var(--color-background-preview);
 
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    
+    /* 添加滾動條 */
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100vh;
+    padding: 20px 0;
   }
 
   &__printable {
