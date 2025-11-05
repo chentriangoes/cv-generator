@@ -28,6 +28,9 @@ function ExperienceInfoView(props) {
       ) : (
         ''
       )}
+      {item.shortDescription && (
+        <p className="preview__short-description">{item.shortDescription}</p>
+      )}
     </div>
   ));
 

@@ -72,7 +72,8 @@ function App() {
     const parentEl = e.target.closest('form');
     const { editingId } = e.target.dataset;
 
-    const newInfo = [...parentEl.querySelectorAll('input')]
+    const newInfo = [...parentEl.querySelectorAll('input, textarea')]
+      .filter((field) => field.name !== 'currentInfoItem') // 排除 currentInfoItem
       .map((field) => ({
         [field.name]: field.type === 'checkbox' ? field.checked : field.value,
       }))

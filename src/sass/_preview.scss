@@ -216,6 +216,15 @@
     .preview__job-responsibility {
       margin-bottom: 9px;
     }
+
+    .preview__short-description {
+      margin-top: 8px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-style: italic;
+      line-height: 1.4;
+      color: rgba(0, 0, 0, 0.75);
+    }
   }
 
   &__skills-info {

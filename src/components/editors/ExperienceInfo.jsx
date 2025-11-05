@@ -15,6 +15,7 @@ function ExperienceInfo(props) {
     startingYear: '',
     endingYear: '',
     onGoing: true,
+    shortDescription: '',
     additionalInfo: [],
     currentInfoItem: '',
   };
@@ -31,6 +32,14 @@ function ExperienceInfo(props) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    // 如果是 shortDescription，檢查字數限制
+    if (name === 'shortDescription') {
+      const wordCount = value.trim().split(/\s+/).filter(word => word.length > 0).length;
+      if (wordCount > 100) {
+        return; // 超過 100 字就不更新
+      }
+    }
 
     setExpInfo((prevInfo) => ({
       ...prevInfo,
@@ -263,6 +272,23 @@ function ExperienceInfo(props) {
               add
             </button>
           </div>
+        </label>
+
+        <label className="form-label">
+          <span className="form-label__title">
+            Short Description (max 100 words): 
+            <span style={{ marginLeft: '10px', fontSize: '0.9em', color: 'var(--color-grey-dark-2)' }}>
+              {expInfo.shortDescription.trim().split(/\s+/).filter(word => word.length > 0).length}/100 words
+            </span>
+          </span>
+          <textarea
+            name="shortDescription"
+            className="form-input form-input__short-description"
+            placeholder="Brief overview of your role and impact..."
+            value={expInfo.shortDescription}
+            onChange={handleChange}
+            rows={3}
+          />
         </label>
       </fieldset>
       <button type="submit" className="btn btn__submit">
