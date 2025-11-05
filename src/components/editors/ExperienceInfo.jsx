@@ -191,7 +191,7 @@ function ExperienceInfo(props) {
             name="startingYear"
             className="form-input form-input__starting-year"
             min="1900-01"
-            value={expInfo.startingYear || '2010-10'}
+            value={expInfo.startingYear || ''}
             onChange={handleChange}
             required
           />
@@ -226,7 +226,7 @@ function ExperienceInfo(props) {
               name="endingYear"
               className="form-input form-input__ending-year"
               min="1900-01"
-              value={expInfo.endingYear || '2014-10'}
+              value={expInfo.endingYear || ''}
               onChange={handleChange}
             />
           </label>

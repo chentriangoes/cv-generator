@@ -193,7 +193,7 @@ function EducationInfo(props) {
             name="startingYear"
             className="form-input form-input__starting-year"
             min="1900-01"
-            value={educInfo.startingYear || '2010-10'}
+            value={educInfo.startingYear || ''}
             onChange={handleChange}
             required
           />
@@ -227,7 +227,7 @@ function EducationInfo(props) {
               name="graduatingYear"
               className="form-input form-input__graduating-year"
               min="1900-01"
-              value={educInfo.graduatingYear || '2014-10'}
+              value={educInfo.graduatingYear || ''}
               onChange={handleChange}
             />
           </label>
