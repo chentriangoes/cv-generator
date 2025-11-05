@@ -43,7 +43,11 @@ function EducationInfo(props) {
   const editEducInfo = (id) => {
     // 不刪除項目，只是載入資料並記錄編輯ID
     const itemToEdit = data.find((item) => item.id === id);
-    setEducInfo(itemToEdit);
+    // 確保載入完整的資料，包括 onGoing 狀態
+    setEducInfo({
+      ...itemToEdit,
+      currentInfoItem: '', // 重置輸入欄位
+    });
     setEditingId(id);
   };
 

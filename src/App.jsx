@@ -74,7 +74,7 @@ function App() {
 
     const newInfo = [...parentEl.querySelectorAll('input')]
       .map((field) => ({
-        [field.name]: field.value,
+        [field.name]: field.type === 'checkbox' ? field.checked : field.value,
       }))
       .reduce((obj, item) => Object.assign(obj, { ...item }));
 
