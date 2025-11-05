@@ -9,8 +9,8 @@ function ExperienceInfoView(props) {
     <div className="preview-unit__exp-info" key={item.id}>
       <div className="preview__info-main-header">
         <div className="preview__info-main-wrapper">
-          <h2 className="preview__job-title">{item.jobTitle}</h2>
           <h2 className="preview__company">{item.company}</h2>
+          <h2 className="preview__job-title">{item.jobTitle}</h2>
         </div>
         <span className="preview__active-years">
           {formatDate(item.startingYear)}-

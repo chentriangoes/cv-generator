@@ -37,6 +37,7 @@
     height: 50px;
     margin-bottom: 10px;
     background: linear-gradient(to left, #ef10a3, #5c10ef);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 

@@ -33,17 +33,27 @@ function ExperienceInfo(props) {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
+    let finalValue = value;
+
     // 如果是 shortDescription，檢查字數限制
     if (name === 'shortDescription') {
-      const wordCount = value.trim().split(/\s+/).filter(word => word.length > 0).length;
-      if (wordCount > 100) {
-        return; // 超過 100 字就不更新
+      const words = value.trim().split(/\s+/).filter(word => word.length > 0);
+      const currentWordCount = (expInfo.shortDescription || '').trim().split(/\s+/).filter(word => word.length > 0).length;
+      
+      // 如果當前已經是100字，且新輸入會增加字數，則拒絕更新
+      if (currentWordCount >= 100 && words.length > currentWordCount) {
+        return;
+      }
+      
+      // 如果貼上大量文字導致超過100字，截斷為前100個字
+      if (words.length > 100) {
+        finalValue = words.slice(0, 100).join(' ');
       }
     }
 
     setExpInfo((prevInfo) => ({
       ...prevInfo,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === 'checkbox' ? checked : finalValue,
     }));
   };
 
@@ -172,18 +182,6 @@ function ExperienceInfo(props) {
 
       <fieldset className="form-fieldset form__experience-info">
         <label className="form-label">
-          <span className="form-label__title">Title/Position:</span>
-          <input
-            type="text"
-            name="jobTitle"
-            className="form-input form-input__job-title"
-            placeholder="Business Analyst"
-            value={expInfo.jobTitle}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label className="form-label">
           <span className="form-label__title">
             Workplace/Company/Organization:
           </span>
@@ -193,6 +191,18 @@ function ExperienceInfo(props) {
             className="form-input form-input__company"
             placeholder="Company Inc."
             value={expInfo.company}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label className="form-label">
+          <span className="form-label__title">Title/Position:</span>
+          <input
+            type="text"
+            name="jobTitle"
+            className="form-input form-input__job-title"
+            placeholder="Business Analyst"
+            value={expInfo.jobTitle}
             onChange={handleChange}
             required
           />
@@ -278,14 +288,14 @@ function ExperienceInfo(props) {
           <span className="form-label__title">
             Short Description (max 100 words): 
             <span style={{ marginLeft: '10px', fontSize: '0.9em', color: 'var(--color-grey-dark-2)' }}>
-              {expInfo.shortDescription.trim().split(/\s+/).filter(word => word.length > 0).length}/100 words
+              {(expInfo.shortDescription || '').trim().split(/\s+/).filter(word => word.length > 0).length}/100 words
             </span>
           </span>
           <textarea
             name="shortDescription"
             className="form-input form-input__short-description"
             placeholder="Brief overview of your role and impact..."
-            value={expInfo.shortDescription}
+            value={expInfo.shortDescription || ''}
             onChange={handleChange}
             rows={3}
           />
