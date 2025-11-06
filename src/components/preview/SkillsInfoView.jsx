@@ -1,17 +1,24 @@
 function SkillsInfoView(props) {
   const { data } = props;
 
-  const skillsInfoMarkup = data.map((category) => (
-    <div key={category.id} className="preview__skill-container">
-      <h2 className="preview__skill-category">{category.category}</h2>
+  const skillsInfoMarkup = data.map((category) => {
+    const items = category.items || [];
+    return (
+      <div key={category.id} className="preview__skill-container">
+        <h2 className="preview__skill-category">{category.category}</h2>
 
-      {category.items.map((item) => (
-        <div key={item.id} className="preview__skill-item">
-          {item.content}
-        </div>
-      ))}
-    </div>
-  ));
+        {items.length > 0 ? (
+          items.map((item) => (
+            <div key={item.id} className="preview__skill-item">
+              {item.content}
+            </div>
+          ))
+        ) : (
+          <div className="preview__skill-item">No skills added</div>
+        )}
+      </div>
+    );
+  });
 
   return (
     <section className="preview-area preview-area__skills-info">

@@ -171,6 +171,37 @@ function ExperienceInfo(props) {
     if (reorderList) reorderList(infoType, sourceIndex, destIndex);
   };
 
+  // drag/drop handlers for additional info items
+  const handleAddlInfoDragStart = (e) => {
+    const idx = e.currentTarget.dataset.index;
+    if (idx === undefined) return;
+    e.dataTransfer.setData('text/plain', idx);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleAddlInfoDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleAddlInfoDrop = (e) => {
+    e.preventDefault();
+    const sourceIndex = Number(e.dataTransfer.getData('text/plain'));
+    const destIndex = Number(e.currentTarget.dataset.index);
+    if (Number.isNaN(sourceIndex) || Number.isNaN(destIndex)) return;
+    if (sourceIndex === destIndex) return;
+    
+    setExpInfo((prevInfo) => {
+      const newAdditionalInfo = Array.from(prevInfo.additionalInfo);
+      const [movedItem] = newAdditionalInfo.splice(sourceIndex, 1);
+      newAdditionalInfo.splice(destIndex, 0, movedItem);
+      return {
+        ...prevInfo,
+        additionalInfo: newAdditionalInfo,
+      };
+    });
+  };
+
   const submittedInfoMarkup = data.map((submittedInfo, idx) => (
     <div
       key={submittedInfo.id}
@@ -191,15 +222,24 @@ function ExperienceInfo(props) {
     </div>
   ));
 
-  const addlInfoMarkup = expInfo.additionalInfo.map((item) => (
-    <ItemBanner
+  const addlInfoMarkup = expInfo.additionalInfo.map((item, idx) => (
+    <div
       key={item.id}
-      id={item.id}
-      name={item.content}
-      deleteItem={deleteAddlInfo}
-      editItem={editAddlInfo}
-      isEditing={editingAddlInfoId === item.id}
-    />
+      data-index={idx}
+      draggable
+      onDragStart={handleAddlInfoDragStart}
+      onDragOver={handleAddlInfoDragOver}
+      onDrop={handleAddlInfoDrop}
+      style={{ cursor: 'move' }}
+    >
+      <ItemBanner
+        id={item.id}
+        name={item.content}
+        deleteItem={deleteAddlInfo}
+        editItem={editAddlInfo}
+        isEditing={editingAddlInfoId === item.id}
+      />
+    </div>
   ));
 
   return (

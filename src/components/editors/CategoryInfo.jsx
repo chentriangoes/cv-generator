@@ -32,14 +32,18 @@ function CategoryInfo(props) {
   const editCategoryInfo = (id) => {
     // 不刪除項目，只是載入資料並記錄編輯ID
     const target = data.find((item) => item.id === id);
-    setCategoryInfo(Object.assign(target, { currentItem: '' }));
+    setCategoryInfo({
+      ...target,
+      items: target.items || [],
+      currentItem: '',
+    });
     setEditingId(id);
   };
 
   const submitCategoryInfo = (e) => {
     e.preventDefault();
 
-    if (!categoryInfo.category || !categoryInfo.items.length) return;
+    if (!categoryInfo.category) return;
 
     if (editingId) {
       // 如果是編輯模式，通知 App.jsx 這是編輯操作
@@ -53,6 +57,8 @@ function CategoryInfo(props) {
     
     setCategoryInfo(emptyState);
   };
+
+  const [editingItemId, setEditingItemId] = useState(null);
 
   const submitItem = (e) => {
     let targetElement;
@@ -69,17 +75,43 @@ function CategoryInfo(props) {
 
     if (!targetElement.value) return;
 
-    setCategoryInfo((prevInfo) => ({
-      ...prevInfo,
-      items: [
-        ...prevInfo.items,
-        {
-          id: nanoid(),
-          content: targetElement.value,
-        },
-      ],
-      currentItem: '',
-    }));
+    if (editingItemId) {
+      // 編輯模式：更新現有項目
+      setCategoryInfo((prevInfo) => ({
+        ...prevInfo,
+        items: prevInfo.items.map((item) =>
+          item.id === editingItemId
+            ? { ...item, content: targetElement.value }
+            : item
+        ),
+        currentItem: '',
+      }));
+      setEditingItemId(null);
+    } else {
+      // 新增模式
+      setCategoryInfo((prevInfo) => ({
+        ...prevInfo,
+        items: [
+          ...prevInfo.items,
+          {
+            id: nanoid(),
+            content: targetElement.value,
+          },
+        ],
+        currentItem: '',
+      }));
+    }
+  };
+
+  const editItem = (id) => {
+    const itemToEdit = categoryInfo.items.find((item) => item.id === id);
+    if (itemToEdit) {
+      setCategoryInfo((prevInfo) => ({
+        ...prevInfo,
+        currentItem: itemToEdit.content,
+      }));
+      setEditingItemId(id);
+    }
   };
 
   const deleteItem = (id) => {
@@ -87,14 +119,24 @@ function CategoryInfo(props) {
       ...prevInfo,
       items: prevInfo.items.filter((item) => item.id !== id),
     }));
+    // 如果正在編輯這個項目，取消編輯狀態
+    if (editingItemId === id) {
+      setEditingItemId(null);
+      setCategoryInfo((prevInfo) => ({
+        ...prevInfo,
+        currentItem: '',
+      }));
+    }
   };
 
-  const itemBanners = categoryInfo.items.map((item) => (
+  const itemBanners = (categoryInfo.items || []).map((item) => (
     <ItemBanner
       key={item.id}
       id={item.id}
       name={item.content}
       deleteItem={deleteItem}
+      editItem={editItem}
+      isEditing={editingItemId === item.id}
     />
   ));
 
@@ -133,7 +175,7 @@ function CategoryInfo(props) {
         handleDelete={handleDelete}
         handleEdit={editCategoryInfo}
         mainText={submittedInfo.category}
-        subText={submittedInfo.items[0].content}
+        subText={submittedInfo.items && submittedInfo.items.length > 0 ? submittedInfo.items[0].content : 'No items'}
         type={infoType}
       />
     </div>

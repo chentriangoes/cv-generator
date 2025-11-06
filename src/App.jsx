@@ -143,7 +143,7 @@ function App() {
           item.id === editingId
             ? {
                 category,
-                items: submittedItems,
+                items: submittedItems || [],
                 id: editingId,
               }
             : item
@@ -157,7 +157,7 @@ function App() {
           ...prevFormData[type],
           {
             category,
-            items: submittedItems,
+            items: submittedItems || [],
             id: nanoid(),
           },
         ],
