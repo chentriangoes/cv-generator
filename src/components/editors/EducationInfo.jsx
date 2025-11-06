@@ -68,6 +68,8 @@ function EducationInfo(props) {
     setEducInfo(emptyState);
   };
 
+  const [editingAddlInfoId, setEditingAddlInfoId] = useState(null);
+
   const submitAddlInfo = (e) => {
     let infoContent;
 
@@ -78,17 +80,43 @@ function EducationInfo(props) {
 
     if (!infoContent) return;
 
-    setEducInfo((prevInfo) => ({
-      ...prevInfo,
-      additionalInfo: [
-        ...prevInfo.additionalInfo,
-        {
-          id: nanoid(),
-          content: infoContent,
-        },
-      ],
-      currentInfoItem: '',
-    }));
+    if (editingAddlInfoId) {
+      // 編輯模式：更新現有項目
+      setEducInfo((prevInfo) => ({
+        ...prevInfo,
+        additionalInfo: prevInfo.additionalInfo.map((item) =>
+          item.id === editingAddlInfoId
+            ? { ...item, content: infoContent }
+            : item
+        ),
+        currentInfoItem: '',
+      }));
+      setEditingAddlInfoId(null);
+    } else {
+      // 新增模式
+      setEducInfo((prevInfo) => ({
+        ...prevInfo,
+        additionalInfo: [
+          ...prevInfo.additionalInfo,
+          {
+            id: nanoid(),
+            content: infoContent,
+          },
+        ],
+        currentInfoItem: '',
+      }));
+    }
+  };
+
+  const editAddlInfo = (id) => {
+    const itemToEdit = educInfo.additionalInfo.find((item) => item.id === id);
+    if (itemToEdit) {
+      setEducInfo((prevInfo) => ({
+        ...prevInfo,
+        currentInfoItem: itemToEdit.content,
+      }));
+      setEditingAddlInfoId(id);
+    }
   };
 
   const deleteAddlInfo = (id) => {
@@ -96,6 +124,14 @@ function EducationInfo(props) {
       ...prevInfo,
       additionalInfo: prevInfo.additionalInfo.filter((item) => item.id !== id),
     }));
+    // 如果正在編輯這個項目，取消編輯狀態
+    if (editingAddlInfoId === id) {
+      setEditingAddlInfoId(null);
+      setEducInfo((prevInfo) => ({
+        ...prevInfo,
+        currentInfoItem: '',
+      }));
+    }
   };
 
   // drag/drop handlers for submitted items
@@ -146,6 +182,8 @@ function EducationInfo(props) {
       id={item.id}
       name={item.content}
       deleteItem={deleteAddlInfo}
+      editItem={editAddlInfo}
+      isEditing={editingAddlInfoId === item.id}
     />
   ));
 
