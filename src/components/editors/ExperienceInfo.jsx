@@ -77,7 +77,8 @@ function ExperienceInfo(props) {
       handleSubmit(e, infoType);
       setEditingId(null);
     } else {
-      // 新增模式
+      // 新增模式：確保清除任何舊的 editingId
+      delete e.target.dataset.editingId;
       handleSubmit(e, infoType);
     }
     
